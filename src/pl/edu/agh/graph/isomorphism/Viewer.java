@@ -1,6 +1,6 @@
 package pl.edu.agh.graph.isomorphism;
 
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -24,12 +24,11 @@ public class Viewer {
     private Graph<Vertex, String> graphB;
 
 
-    public Viewer() {
+    public Viewer(int vertexCount) {
         generator = new GraphsAndSubgraphsGenerator();
-        graphA = generator.generateGraph();
-        graphB = generator.generateGraph();
+        graphA = generator.generateGraph((int) (0.7*vertexCount));
+        graphB = generator.generateGraph(vertexCount);
         window = new JFrame("Subgraphs Isomorphism");
-
         init();
     }
 
@@ -42,9 +41,9 @@ public class Viewer {
         JPanel panelB = new JPanel();
         panelB.setBorder(new TitledBorder("Graf B"));
         VisualizationViewer<Vertex, String> vvA =
-                new VisualizationViewer<Vertex, String>(new KKLayout<Vertex, String>(graphA));
+                new VisualizationViewer<Vertex, String>(new ISOMLayout<Vertex, String>(graphA));
         VisualizationViewer<Vertex, String> vvB =
-                new VisualizationViewer<Vertex, String>(new KKLayout<Vertex, String>(graphB));
+                new VisualizationViewer<Vertex, String>(new ISOMLayout<Vertex, String>(graphB));
         DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
         gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
         vvA.setGraphMouse(gm);
@@ -73,6 +72,13 @@ public class Viewer {
 
     public void show() {
         window.setVisible(true);
+        System.out.println(graphA.getEdgeCount());
+        System.out.println(graphB.getEdgeCount());
+    }
+
+    public static void main(String[] args) {
+        Viewer v = new Viewer(30);
+        v.show();
     }
 
 }
